@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="preview">
-      <p class="text-bold text-h1 text" :style="{ color: textColor, animationDuration: marqueeSpeed+'s' }" :id="glow?'text-glow':''">{{ text }}</p>
+      <p class="text-bold text-h1 text" :style="[glow?{textShadow:'0px 0px 5px #fff, 0px 0px 10px #fff,0px 0px 20px '+textColor+',0px 0px 30px '+textColor+', 0px 0px 40px '+textColor+',0px 0px 55px '+textColor+',0px 0px 75px '+textColor, color: '#fff', animationDuration: marqueeSpeed+'s'} :{ color: textColor, animationDuration: marqueeSpeed+'s'}]">{{ text }}</p>
     </div>
     <div class="setting">
       <form>
@@ -50,7 +50,6 @@ const marqueeSpeed = computed(()=>{
 
 function setSpeed(s){
   speed.value = s
-  console.log(speed.value)
 }
 </script>
 
@@ -67,9 +66,9 @@ function setSpeed(s){
   transform: translateX(100%);
   animation: scroll-left linear infinite;
 }
-#text-glow{
+/* #text-glow{
   text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px, 0 0 30px , 0 0 40px , 0 0 55px , 0 0 75px ;
-}
+} */
 
 @keyframes scroll-left {
   0% 
