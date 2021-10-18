@@ -1,82 +1,97 @@
 <template>
   <q-page>
     <div class="preview">
-      <p class="text-bold text-h1 text" :style="[glow?{textShadow:'0px 0px 5px #fff, 0px 0px 10px #fff,0px 0px 20px '+textColor+',0px 0px 30px '+textColor+', 0px 0px 40px '+textColor+',0px 0px 55px '+textColor+',0px 0px 75px '+textColor, color: '#fff', animationDuration: marqueeSpeed+'s'} :{ color: textColor, animationDuration: marqueeSpeed+'s'}]">{{ text }}</p>
+      <p v-if="store.state.stop" class="text-bold text-h1 text" :style="[store.state.glow?{textShadow:'0px 0px 5px #fff, 0px 0px 10px #fff,0px 0px 20px '+store.state.textColor+',0px 0px 30px '+store.state.textColor+', 0px 0px 40px '+store.state.textColor+',0px 0px 55px '+store.state.textColor+',0px 0px 75px '+store.state.textColor, color: '#fff'} :{ color: store.state.textColor }]">{{ store.state.text }}</p>
+      <p v-if="!store.state.stop" class="text-bold text-h1 text" :style="[store.state.glow?{textShadow:'0px 0px 5px #fff, 0px 0px 10px #fff,0px 0px 20px '+store.state.textColor+',0px 0px 30px '+store.state.textColor+', 0px 0px 40px '+store.state.textColor+',0px 0px 55px '+store.state.textColor+',0px 0px 75px '+store.state.textColor, color: '#fff', animationDuration: marqueeSpeed+'s'} :{ color: store.state.textColor, animationDuration: marqueeSpeed+'s'}]">{{ store.state.text }}</p>
     </div>
     <div class="setting">
-      <form>
-        <q-input rounded outlined v-model="text" class="q-mb-md"/>
-        <p>글자색</p>
+      
+        <q-input rounded outlined v-model="store.state.text" :rules="[ val => val.length <= 15 || '15자 이내로 작성해주세요^^']">
+        <template v-slot:append>
+          <q-icon name="close" @click="store.state.text = ''" class="cursor-pointer" />
+        </template>
+
+        <template v-slot:hint>
+          글자를 입력해주세요
+        </template>
+        </q-input>
+        <p class="margin">글자색</p>
         <div class="color">
-          <q-btn round color="red" @click="textColor='red'"></q-btn>
-          <q-btn round color="orange" @click="textColor='orange'"></q-btn>
-          <q-btn round color="yellow" @click="textColor='yellow'"></q-btn>
-          <q-btn round style="background: #7FFFD4;" @click="textColor='#7FFFD4'"></q-btn>
-          <q-btn round color="green" @click="textColor='green'"></q-btn>
-          <q-btn round color="blue" @click="textColor='blue'"></q-btn>
-          <q-btn round color="purple" @click="textColor='purple'"></q-btn>
+          <q-btn round color="red" @click="store.state.textColor='red'"></q-btn>
+          <q-btn round color="orange" @click="store.state.textColor='orange'"></q-btn>
+          <q-btn round color="yellow" @click="store.state.textColor='yellow'"></q-btn>
+          <q-btn round style="background: #7FFFD4;" @click="store.state.textColor='#7FFFD4'"></q-btn>
+          <q-btn round color="green" @click="store.state.textColor='green'"></q-btn>
+          <q-btn round color="blue" @click="store.state.textColor='blue'"></q-btn>
+          <q-btn round color="purple" @click="store.state.textColor='purple'"></q-btn>
         </div>
-        <p class="q-mt-md">속도</p>
-        <div class="speed q-mb-sm">
+        <p class="margin">속도</p>
+        <div class="speed">
           <q-btn rounded color="secondary" label="느리게" @click="setSpeed(0.5)"></q-btn>
           <q-btn rounded color="secondary" label="중간" @click="setSpeed(1)"></q-btn>
           <q-btn rounded color="secondary" label="빠르게" @click="setSpeed(2)"></q-btn>
         </div>
+        <div class="margin">
         <q-toggle
-        v-model="glow"
+        v-model="store.state.glow"
         color="green"
         label="반짝임"
         left-label
         />
-        <q-btn type="submit" rounded color="primary" label="시  작" class="submit"></q-btn>
-      </form>
+        <q-toggle
+        v-model="store.state.stop"
+        color="orange"
+        label="멈춤"
+        left-label
+        />
+        </div>
+        <q-btn rounded color="primary" label="시  작" class="submit" @click="$router.replace({path:'led'})"></q-btn>
     </div>
 
   </q-page>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, inject } from 'vue'
 
-const text = ref('Simple LED')
-const textColor = ref('red')
-const speed = ref(1)
-const glow = ref(false)
+const store = inject('store')
 
 const marqueeSpeed = computed(()=>{
-  let timeTaken = text.value.length / speed.value
+  let timeTaken = store.state.text.length / store.state.speed
   return timeTaken
 })
 
 function setSpeed(s){
-  speed.value = s
+  store.state.speed = s
 }
 </script>
 
 <style>
+.margin{
+  margin-top : 2vh;
+}
+
 .preview{
   display: flex;
   height: 30vh;
   background: #000;
   white-space: nowrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .text{
-  align-self: center;
-  transform: translateX(100%);
   animation: scroll-left linear infinite;
 }
-/* #text-glow{
-  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px, 0 0 30px , 0 0 40px , 0 0 55px , 0 0 75px ;
-} */
 
 @keyframes scroll-left {
-  0% 
+  from 
   {
-    transform: translateX(100%);
+    transform: translateX(120%);
   }
-  100% {
-    transform: translateX(-100%);
+  to
+  {
+    transform: translateX(-120%);
   }
 }       
 
@@ -93,7 +108,7 @@ function setSpeed(s){
   justify-content: space-around;
 }
 .submit{
-  margin-top: 20px;
+  margin-top: 4vh;
   width: 100%;
 }
 </style>

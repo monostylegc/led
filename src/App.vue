@@ -1,10 +1,9 @@
 <template>
   <router-view />
 </template>
-<script>
-import { defineComponent } from 'vue';
+<script setup>
+import { provide } from 'vue';
+import store from './store/store';
 
-export default defineComponent({
-  name: 'App'
-})
+provide('store', store)
 </script>

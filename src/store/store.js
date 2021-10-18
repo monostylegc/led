@@ -1,10 +1,11 @@
 import { reactive } from 'vue'
 
-const store = reactive({
+const state = reactive({
     text:'LED짱',
     textColor:'red',
     speed: 1,
-    glow: false
+    glow: false,
+    stop: false
 })
 
-export { store }
+export default { state }
